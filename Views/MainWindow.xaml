@@ -1,0 +1,347 @@
+﻿<Window x:Class="CafeSelfService.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Кафе • касса самообслуживания" Width="1180" Height="790" MinWidth="820" MinHeight="600"
+ Background="#F3E9CB" Foreground="#203F33" FontFamily="Segoe UI" FontSize="14" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="FrameworkElement" x:Key="PageContent"><Style.Triggers><DataTrigger Binding="{Binding HasDishDetails}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger></Style.Triggers></Style>
+        <SolidColorBrush x:Key="Green" Color="#183F32"/>
+        <Style x:Key="Action" TargetType="Button">
+            <Setter Property="Background" Value="#183F32"/>
+            <Setter Property="Foreground" Value="#FFF6DC"/>
+            <Setter Property="Padding" Value="18,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Body" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Body" Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Body" Property="BorderBrush" Value="#C89B3C"/>
+                                <Setter TargetName="Body" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Body" Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Navigation" TargetType="Button" BasedOn="{StaticResource Action}">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Padding" Value="18,15"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Body" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Body" Property="Background" Value="#D4B76E"/>
+                                <Setter Property="Foreground" Value="#183F32"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Body" Property="BorderBrush" Value="#D9BA6B"/>
+                                <Setter TargetName="Body" Property="BorderThickness" Value="1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="MenuPanel" TargetType="FrameworkElement">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CurrentSection}" Value="Меню">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#F3E9CB">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Border Background="{StaticResource Green}" Padding="22,30" Style="{StaticResource PageContent}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="10,0,0,38">
+                    <TextBlock Text="MaKEY" FontFamily="Georgia" FontSize="48" Foreground="#F4E5BA"/>
+                    <TextBlock Text="КАФЕ - БЫСТРО И СО ВКУСОМ" FontSize="10" Foreground="#BDCCA7" Margin="1,9,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="Меню">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource Navigation}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentSection}" Value="Меню">
+                                        <Setter Property="Background" Value="#E6CE8B"/>
+                                        <Setter Property="Foreground" Value="#183F32"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE80A;" FontFamily="Segoe MDL2 Assets" Margin="0,2,14,0"/>
+                            <TextBlock Text="Меню" FontSize="18"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="Корзина">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource Navigation}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentSection}" Value="Корзина">
+                                        <Setter Property="Background" Value="#E6CE8B"/>
+                                        <Setter Property="Foreground" Value="#183F32"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE7BF;" FontFamily="Segoe MDL2 Assets" Margin="0,2,14,0"/>
+                            <TextBlock Text="Корзина" FontSize="18"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="Статистика">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource Navigation}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentSection}" Value="Статистика">
+                                        <Setter Property="Background" Value="#E6CE8B"/>
+                                        <Setter Property="Foreground" Value="#183F32"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" Margin="0,2,14,0"/>
+                            <TextBlock Text="Статистика" FontSize="18"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Row="3" Margin="10,0,0,0">
+                    <Border Height="1" Background="#41614B" Margin="0,0,0,18"/>
+                    <TextBlock Text="Хорошая еда.&#10;Хороший день." FontFamily="Georgia" FontSize="18" Foreground="#E6CE8B" LineHeight="26"/>
+                    <TextBlock Text="Касса самообслуживания" FontSize="10" Foreground="#BDCCA7" Margin="0,16,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Grid Grid.Column="1" Margin="30,26,24,18" Style="{StaticResource PageContent}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <DockPanel Margin="0,0,0,22">
+                <TextBlock DockPanel.Dock="Right" Text="ПРИЯТНОГО АППЕТИТА" FontSize="10" Foreground="#6B765A" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding CurrentSection}" FontFamily="Georgia" FontSize="30"/>
+            </DockPanel>
+            <Grid Grid.Row="1" Style="{StaticResource MenuPanel}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border Background="#E8D59D" CornerRadius="12" Padding="24,20" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Выберите что-нибудь вкусное" FontFamily="Georgia" FontSize="25" TextWrapping="Wrap"/>
+                        <TextBlock Text="Любимые блюда для быстрого обеда и маленьких перерывов." Foreground="#536344" Margin="0,9,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+                <Grid Grid.Row="1" Margin="0,0,6,20">
+                    <Border Background="#FFF8E5" BorderBrush="#D7C79D" BorderThickness="1" CornerRadius="8" Padding="14,10">
+                        <DockPanel>
+                            <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="#6C795B"/>
+                            <Grid>
+                                <TextBox x:Name="Search" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent" Foreground="#203F33" FontSize="14" VerticalContentAlignment="Center" AutomationProperties.Name="Поиск блюда"/>
+                                <TextBlock Text="Найти блюдо или категорию…" Foreground="#8B8B70" IsHitTestVisible="False" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Text, ElementName=Search}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <ListBox ItemsSource="{Binding MenuItems}" SelectedItem="{Binding SelectedDish, Mode=TwoWay}" Background="Transparent" BorderThickness="0" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0,0,16,16"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="Card" Background="#FFF8E5" BorderBrush="#DDD0AC" BorderThickness="1" CornerRadius="12">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Card" Property="BorderBrush" Value="#9B9F6D"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Card" Property="BorderBrush" Value="#28563D"/>
+                                                    <Setter TargetName="Card" Property="Background" Value="#F0EACE"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="220" Height="250" Margin="18">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Border Background="#E9E9CD" CornerRadius="5" Padding="9,5" HorizontalAlignment="Left">
+                                        <TextBlock Text="{Binding Category}" Foreground="#526242" FontSize="11"/>
+                                    </Border>
+                                    <TextBlock Grid.Row="1" Text="{Binding Name}" FontFamily="Georgia" FontSize="22" TextWrapping="Wrap" Margin="0,18,0,10"/>
+                                    <TextBlock Grid.Row="2" Text="{Binding Description}" TextWrapping="Wrap" Foreground="#70765D" FontSize="13" LineHeight="20"/>
+                                    <DockPanel Grid.Row="3" Margin="0,16,0,0">
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:0} ₽}" FontSize="23" FontWeight="SemiBold"/>
+                                    </DockPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasNoResults}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Text="Пока ничего нет" FontFamily="Georgia" FontSize="25" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Попробуйте другой поисковый запрос." Foreground="#70765D" Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Border Grid.Row="1" Background="#FFF8E5" CornerRadius="12" Padding="35">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentSection}" Value="Корзина">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <DockPanel Margin="0,0,0,20">
+                        <TextBlock Text="Ваш заказ" FontFamily="Georgia" FontSize="28"/>
+                        <TextBlock Text="{Binding CartCount, StringFormat=Блюд: {0}}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding CartItems}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate><DataTemplate>
+                            <Border BorderBrush="#DDD0AC" BorderThickness="0,0,0,1" Padding="0,16">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <StackPanel Margin="0,0,15,0">
+                                        <TextBlock Text="{Binding Name}" FontSize="19" FontFamily="Georgia" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:0.##} ₽ / шт.}" Foreground="#70765D" Margin="0,6,0,0"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                            <Button Content="−" Padding="10,3" Style="{StaticResource Action}" Command="{Binding DataContext.DecreaseQuantityCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" AutomationProperties.Name="Уменьшить количество"/>
+                                            <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" Margin="12,0"/>
+                                            <Button Content="+" Padding="10,3" Style="{StaticResource Action}" Command="{Binding DataContext.IncreaseQuantityCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" AutomationProperties.Name="Увеличить количество"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="{Binding Total, StringFormat={}{0:0.##} ₽}" VerticalAlignment="Center" FontSize="20" Margin="0,0,18,0"/>
+                                    <Button Grid.Column="2" Content="Убрать" Style="{StaticResource Action}" VerticalAlignment="Center" Command="{Binding DataContext.RemoveFromCartCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate></ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel.Style><Style TargetType="StackPanel"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding IsCartEmpty}" Value="True"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></StackPanel.Style>
+                        <TextBlock Text="Корзина пока пуста" FontFamily="Georgia" FontSize="25"/>
+                        <Button Content="Выбрать блюда" Command="{Binding NavigateCommand}" CommandParameter="Меню" Style="{StaticResource Action}" Margin="0,20,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <Border Grid.Row="2" BorderBrush="#DDD0AC" BorderThickness="0,1,0,0" Padding="0,20,0,0">
+                        <DockPanel><TextBlock Text="Итого" FontFamily="Georgia" FontSize="25"/><TextBlock Text="{Binding CartTotal, StringFormat={}{0:0.##} ₽}" FontSize="26" FontWeight="SemiBold" HorizontalAlignment="Right"/></DockPanel>
+                    </Border>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" Background="#FFF8E5" CornerRadius="12" Padding="35">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentSection}" Value="Статистика">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="400">
+                    <TextBlock Text="Всё начинается с заказа" FontFamily="Georgia" FontSize="28" TextWrapping="Wrap" TextAlignment="Center"/>
+                    <TextBlock Text="Здесь появятся выручка, популярные блюда и история продаж, когда будет готова работа с заказами." TextWrapping="Wrap" TextAlignment="Center" Foreground="#70765D" Margin="0,16,0,0"/>
+                </StackPanel>
+            </Border>
+            <TextBlock Grid.Row="2" Text="{Binding StatusMessage}" Foreground="#8A4937" FontSize="13" TextWrapping="Wrap" Margin="0,12,0,0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding StatusMessage}" Value=""><Setter Property="Visibility" Value="Collapsed"/></DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+        <Grid Grid.ColumnSpan="2" Background="#99132820">
+            <Grid.Style><Style TargetType="Grid"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding HasDishDetails}" Value="True"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></Grid.Style>
+            <Border Background="#FFF8E5" CornerRadius="16" Padding="32" Width="500" MaxHeight="500" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="24">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SelectedDish.Category}" Foreground="#70765D" Margin="0,0,0,14"/>
+                        <TextBlock Text="{Binding SelectedDish.Name}" FontFamily="Georgia" FontSize="30" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding SelectedDish.Description}" TextWrapping="Wrap" FontSize="16" LineHeight="25" Margin="0,20,0,24"/>
+                        <TextBlock Text="{Binding SelectedDish.Price, StringFormat={}{0:0.##} ₽}" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,24"/>
+                        <Button Content="Добавить в корзину" Style="{StaticResource Action}" Command="{Binding AddToCartCommand}"/>
+                        <Button Content="Вернуться в меню" Style="{StaticResource Action}" Background="#E6CE8B" Foreground="#183F32" Command="{Binding CloseDishCommand}" Margin="0,10,0,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
