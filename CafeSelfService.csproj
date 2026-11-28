@@ -93,7 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ConnectionStrings.example.config" />
     <Content Include="ConnectionStrings.local.config" Condition="Exists('ConnectionStrings.local.config')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

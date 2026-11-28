@@ -4,6 +4,7 @@
  Title="Кафе • касса самообслуживания" Width="1180" Height="790" MinWidth="820" MinHeight="600"
  Background="#F3E9CB" Foreground="#203F33" FontFamily="Segoe UI" FontSize="14" WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVisibility"/>
         <Style TargetType="FrameworkElement" x:Key="PageContent"><Style.Triggers><DataTrigger Binding="{Binding HasDishDetails}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger></Style.Triggers></Style>
         <SolidColorBrush x:Key="Green" Color="#183F32"/>
         <Style x:Key="Action" TargetType="Button">
@@ -15,7 +16,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Body" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Body" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}"
+                                BorderBrush="Transparent" BorderThickness="2">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -24,7 +26,6 @@
                             </Trigger>
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="Body" Property="BorderBrush" Value="#C89B3C"/>
-                                <Setter TargetName="Body" Property="BorderThickness" Value="2"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="Body" Property="Opacity" Value="0.45"/>
@@ -69,6 +70,7 @@
         </Style>
     </Window.Resources>
     <Grid Background="#F3E9CB">
+        <Grid x:Name="MenuScreen" Visibility="Collapsed" Background="#F3E9CB">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220"/>
             <ColumnDefinition/>
@@ -118,7 +120,7 @@
                             <TextBlock Text="Корзина" FontSize="18"/>
                         </StackPanel>
                     </Button>
-                    <Button Command="{Binding NavigateCommand}" CommandParameter="Статистика">
+                    <Button Command="{Binding NavigateCommand}" CommandParameter="Статистика" Visibility="{Binding IsAdministrator, Converter={StaticResource BoolVisibility}}">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource Navigation}">
                                 <Style.Triggers>
@@ -249,8 +251,8 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <TextBlock Text="Пока ничего нет" FontFamily="Georgia" FontSize="25" HorizontalAlignment="Center"/>
-                        <TextBlock Text="Попробуйте другой поисковый запрос." Foreground="#70765D" Margin="0,10,0,0"/>
+                        <TextBlock Text="{Binding EmptyMenuMessage}" FontFamily="Georgia" FontSize="25"
+                                   HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -343,5 +345,31 @@
                 </ScrollViewer>
             </Border>
         </Grid>
+        </Grid>
+        <Border x:Name="SignInScreen" Width="420" Padding="32" Background="#FFF8E5"
+                CornerRadius="16" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel KeyboardNavigation.TabNavigation="Cycle">
+                <TextBlock Text="MaKey" FontFamily="Georgia" FontSize="32" Foreground="#183F32"/>
+                <TextBlock x:Name="AuthTitle" Text="Вход" FontFamily="Georgia" FontSize="24" Margin="0,8,0,20"/>
+                <Label Content="_Логин" Target="{Binding ElementName=LoginInput}" Padding="0,0,0,4"/>
+                <TextBox x:Name="LoginInput" MaxLength="50" Padding="8" Margin="0,0,0,12"/>
+                <StackPanel x:Name="RegistrationFields" Visibility="Collapsed">
+                    <Label Content="_Имя" Target="{Binding ElementName=NameInput}" Padding="0,0,0,4"/>
+                    <TextBox x:Name="NameInput" MaxLength="100" Padding="8" Margin="0,0,0,12"/>
+                </StackPanel>
+                <Label Content="_Пароль" Target="{Binding ElementName=PasswordInput}" Padding="0,0,0,4"/>
+                <PasswordBox x:Name="PasswordInput" MaxLength="128" Padding="8"/>
+                <TextBlock x:Name="AuthError" Foreground="#8A4937" TextWrapping="Wrap" Margin="0,12,0,0"/>
+                <Button x:Name="SubmitButton" Content="Войти" Style="{StaticResource Action}"
+                        IsDefault="True" Click="SubmitAccount" Margin="0,12,0,0"/>
+                <Button x:Name="SwitchButton" Content="Создать аккаунт" Click="SwitchAccountMode"
+                        Style="{StaticResource Action}" Background="#E6CE8B" Foreground="#183F32" Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
+        <Button x:Name="TestSignInButton" Content="Тестовый вход"
+                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,16,16,0"
+                Padding="10,5" FontSize="12" Style="{StaticResource Action}"
+                Background="#E6CE8B" Foreground="#183F32" Visibility="Collapsed"
+                Click="SignInForTesting"/>
     </Grid>
 </Window>
